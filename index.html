@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALL AI</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,"Noto Sans JP",sans-serif;color:#fff}
+body{
+  min-height:100vh;
+  background:
+    linear-gradient(rgba(0,10,25,.35),rgba(0,8,20,.58)),
+    url("background.png") center/cover fixed no-repeat;
+  overflow-x:hidden;
+}
+.overlay{min-height:100vh;padding:28px 22px 50px;background:rgba(0,8,20,.12)}
+header{
+  max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 20px;border:1px solid rgba(0,220,255,.45);
+  background:rgba(0,20,40,.62);backdrop-filter:blur(10px);border-radius:18px;
+  box-shadow:0 0 25px rgba(0,210,255,.18)
+}
+.logo{font-size:28px;font-weight:800;letter-spacing:5px;color:#6ff8ff}
+.status{font-size:13px;color:#8dffbf}
+.status::before{content:"●";margin-right:7px}
+.main{max-width:1200px;margin:22px auto;display:grid;grid-template-columns:1.3fr .7fr;gap:22px}
+.panel{
+  border:1px solid rgba(0,220,255,.45);border-radius:20px;
+  background:rgba(0,18,38,.68);backdrop-filter:blur(12px);
+  box-shadow:0 0 35px rgba(0,190,255,.16),inset 0 0 30px rgba(0,170,255,.04);
+}
+.chat{min-height:560px;padding:24px}
+.title{font-size:14px;color:#76eaff;letter-spacing:2px;margin-bottom:14px}
+h1{margin:0 0 8px;font-size:42px;letter-spacing:4px}
+.sub{color:#b6d9e5;margin-bottom:22px}
+.messages{min-height:280px;display:flex;flex-direction:column;gap:12px}
+.msg{padding:14px 16px;border-radius:14px;max-width:85%;line-height:1.6}
+.ai{align-self:flex-start;background:rgba(0,155,220,.17);border:1px solid rgba(0,220,255,.28)}
+.user{align-self:flex-end;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.inputrow{display:flex;gap:10px;margin-top:20px}
+input{
+  flex:1;padding:15px;border-radius:12px;border:1px solid rgba(0,220,255,.4);
+  background:rgba(0,0,0,.38);color:#fff;outline:none
+}
+button{
+  border:1px solid #00eaff;background:rgba(0,210,255,.15);color:#fff;
+  padding:12px 18px;border-radius:12px;cursor:pointer;font-weight:700
+}
+button:hover{background:rgba(0,220,255,.3)}
+.check{padding:24px}
+.check h2{margin:0 0 5px;color:#76eaff}
+.check small{color:#9cc4d1}
+table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px}
+th,td{padding:12px 8px;border-bottom:1px solid rgba(130,220,255,.16);text-align:left}
+th{color:#8defff;font-weight:600}
+.score{font-weight:800;color:#9dffcf}
+.bar{height:7px;background:rgba(255,255,255,.1);border-radius:20px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,#00bfff,#73ffff);border-radius:20px}
+.total{margin-top:20px;padding:18px;border-radius:15px;background:rgba(0,190,255,.10);border:1px solid rgba(0,220,255,.25)}
+.total strong{font-size:30px;color:#8dfffb}
+.badge{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:20px;background:rgba(70,255,170,.12);color:#8dffbf}
+@media(max-width:850px){.main{grid-template-columns:1fr}.chat{min-height:480px}h1{font-size:34px}}
+</style>
+</head>
+<body>
+<div class="overlay">
+<header>
+  <div class="logo">ALL</div>
+  <div class="status">SYSTEM ONLINE</div>
+</header>
+
+<div class="main">
+<section class="panel chat">
+  <div class="title">ARTIFICIAL INTELLIGENCE / CORE</div>
+  <h1>ALL AI</h1>
+  <div class="sub">あなた専用のAIアシスタント</div>
+  <div class="messages" id="messages">
+    <div class="msg ai">こんにちは。ALL AIです。質問を入力してください。</div>
+  </div>
+  <div class="inputrow">
+    <input id="prompt" placeholder="ALL AIに質問する..." autocomplete="off">
+    <button onclick="sendMessage()">送信</button>
+  </div>
+</section>
+
+<section class="panel check">
+  <h2>性能チェック表</h2>
+  <small>ALL AI SYSTEM PERFORMANCE</small>
+  <table>
+    <tr><th>項目</th><th>評価</th></tr>
+    <tr><td>回答速度</td><td><span class="score">98%</span><div class="bar"><div class="fill" style="width:98%"></div></div></td></tr>
+    <tr><td>文章理解</td><td><span class="score">96%</span><div class="bar"><div class="fill" style="width:96%"></div></div></td></tr>
+    <tr><td>質問対応</td><td><span class="score">94%</span><div class="bar"><div class="fill" style="width:94%"></div></div></td></tr>
+    <tr><td>創作性能</td><td><span class="score">92%</span><div class="bar"><div class="fill" style="width:92%"></div></div></td></tr>
+    <tr><td>安定性</td><td><span class="score">97%</span><div class="bar"><div class="fill" style="width:97%"></div></div></td></tr>
+  </table>
+  <div class="total">
+    <div>総合性能</div>
+    <strong>95.4%</strong>
+    <div class="badge">● GOOD / SYSTEM READY</div>
+  </div>
+</section>
+</div>
+</div>
+
+<script>
+function sendMessage(){
+  const input=document.getElementById("prompt");
+  const text=input.value.trim();
+  if(!text)return;
+  const box=document.getElementById("messages");
+  const user=document.createElement("div");
+  user.className="msg user";
+  user.textContent=text;
+  box.appendChild(user);
+  input.value="";
+  setTimeout(()=>{
+    const ai=document.createElement("div");
+    ai.className="msg ai";
+    ai.textContent="受信しました。「"+text+"」について処理中です。現在は画面UI版なので、AI APIを接続すると本物の回答機能を追加できます。";
+    box.appendChild(ai);
+    box.scrollTop=box.scrollHeight;
+  },500);
+}
+document.getElementById("prompt").addEventListener("keydown",e=>{
+  if(e.key==="Enter")sendMessage();
+});
+</script>
+</body>
+</html>
